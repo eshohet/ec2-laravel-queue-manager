@@ -1,0 +1,13 @@
+EC2 Queue Manager for Laravel
+
+Place the cron.config file inside of your .ebextensions folder in the root of your project.
+This file will create a shell script at the direct "/tmp" on your ec2 instances.
+It will also create a cronjob that is ran by root.
+
+This cronjob will automatically switch to the webapp user and then run the manager.sh script.
+The manager.sh script checks for a file called "queue_pid" in /tmp.
+If it finds that file, it will check /proc/pid/cmdline to make sure that the command:
+php /var/www/html/artisan queue:listen is actually being ran.
+
+If that is not the case, it will spawn up a new process and write it's pid to queue_pid.
+
